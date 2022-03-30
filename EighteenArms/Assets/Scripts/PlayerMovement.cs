@@ -70,16 +70,23 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        //if (GameManager.GetGameOver()) return;
         jumpPressed = Input.GetButtonDown("Jump");
         jumpHeld = Input.GetButton("Jump");
         crouchHeld = Input.GetButton("Crouch");
         crouchPressed = Input.GetButtonDown("Crouch");
     }
     private void FixedUpdate() {
+        if (GameManager.GetGameOver()) {
+            rb.velocity = Vector2.zero;
+            return;
+        } 
         PhysicsCheck();
         GroundMovement();
         MidAirMovement();
     }
+
+     
 
     void PhysicsCheck() {
 
@@ -197,6 +204,8 @@ public class PlayerMovement : MonoBehaviour
             isJump = true;
             jumpTime = Time.time + jumpHoldDuration;
             rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+
+            AudioManager.PlayJumpAudio();
         }
         else if (isJump) {
             if (jumpHeld) {
