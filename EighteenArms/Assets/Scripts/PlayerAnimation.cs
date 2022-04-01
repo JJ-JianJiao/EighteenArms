@@ -13,6 +13,7 @@ public class PlayerAnimation : MonoBehaviour
     int crouchID;
     int speedID;
     int fallID;
+    int slideWallID;
 
     private void Start()
     {
@@ -24,6 +25,7 @@ public class PlayerAnimation : MonoBehaviour
         crouchID = Animator.StringToHash("isCrouching");
         speedID = Animator.StringToHash("speed");
         fallID = Animator.StringToHash("verticalVelocity");
+        slideWallID = Animator.StringToHash("SlideWall");
     }
 
     private void Update()
@@ -34,8 +36,7 @@ public class PlayerAnimation : MonoBehaviour
         anim.SetBool(hangingID, movement.isHanging);
         anim.SetBool(crouchID, movement.isCrouch);
         anim.SetFloat(fallID, rb.velocity.y);
-
-
+        anim.SetBool(slideWallID, movement.isWallSlide);
     }
 
     public void StepAudio() {

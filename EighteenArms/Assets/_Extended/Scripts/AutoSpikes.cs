@@ -11,6 +11,7 @@ public class AutoSpikes : MonoBehaviour
 	bool playerInRange;
 	bool trapActive;
 	int playerLayer;
+	public float activeTime = 0;
 
 	void Start ()
 	{
@@ -18,6 +19,7 @@ public class AutoSpikes : MonoBehaviour
 
 		anim = GetComponent<Animator>();
 		audioSource = GetComponent<AudioSource>();
+
 	}
 	
 	void Update ()
@@ -35,9 +37,14 @@ public class AutoSpikes : MonoBehaviour
 		{
 			playerInRange = true;
 			trapActive = true;
-			anim.SetBool(activeParamID, true);
-			audioSource.Play();
+
+			Invoke("ActiveSpike", activeTime);
+
 		}
+	}
+
+	void ActiveSpike() {
+		anim.SetBool(activeParamID, true);
 	}
 
 	void OnTriggerExit2D(Collider2D collision)
@@ -47,5 +54,9 @@ public class AutoSpikes : MonoBehaviour
 			playerInRange = false;
 			deactivationTime = Time.time + activeDuration;
 		}
+	}
+
+	public void AudioPlay() {
+		audioSource.Play();
 	}
 }

@@ -8,22 +8,35 @@ public class Orib : MonoBehaviour
 
     int playerLayerIndex;
 
+    public AutoDoor autoDoor;
+
+    bool touched;
+
     private void Start()
     {
         playerLayerIndex = LayerMask.NameToLayer("Player");
         GameManager.RegisterOrb(this);
+        if (autoDoor != null) {
+            autoDoor.RegisterOrb();
+        }
+        touched = false;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.layer == playerLayerIndex)
+        if (collision.gameObject.layer == playerLayerIndex && !touched)
         {
+            touched = true;
             Instantiate(explosionVFXPrefab, transform.position, transform.rotation);
             gameObject.SetActive(false);
 
             AudioManager.PlayOrbAudio();
 
             GameManager.PlayerGetOrb(this);
+            if (autoDoor != null)
+            {
+                autoDoor.CollectOrb();
+            }
         }
     }
 }

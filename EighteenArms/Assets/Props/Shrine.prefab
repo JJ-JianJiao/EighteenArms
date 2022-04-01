@@ -18898,7 +18898,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -2125715543
+  m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: a90df309aad5b524fb6e0f7fdbbcd113, type: 3}
@@ -18925,6 +18925,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   explosionVFXPrefab: {fileID: 1305675960232650, guid: 1e4ec98ba4bb0244292ae6c0c26be7f4, type: 3}
+  autoDoor: {fileID: 0}
 --- !u!95 &95902566937892156
 Animator:
   serializedVersion: 3

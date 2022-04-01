@@ -19,12 +19,22 @@ public class PlayerMovement : MonoBehaviour
     public float hangingJumpForce = 15f;
     float jumpTime;
 
+    [Header("SlideWall")]
+    public float slideSpeed = -1f;
+    public float slideJumpForceX = 15f;
+    public float slideJumpForceY = 15f;
+
+
     [Header("Player State")]
     public bool isCrouch = false;
     public bool isOnGround;
     public bool isJump;
     public bool isHeadBlock;
     public bool isHanging;
+    public bool isHoldLeft;
+    public bool isHoldRight;
+
+    public bool isWallSlide;
 
     [Header("Environment Check")]
     public LayerMask groundLayer;
@@ -36,7 +46,7 @@ public class PlayerMovement : MonoBehaviour
 
     float playerHeight;
     public float eyeHeight = 1.1f;
-    public float grabDistance = 0.4f;
+    public float grabDistance = 0.1f;
     public float reachOffset = 0.1f;
 
 
@@ -71,22 +81,52 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         //if (GameManager.GetGameOver()) return;
-        jumpPressed = Input.GetButtonDown("Jump");
+        //jumpPressed = Input.GetButtonDown("Jump");
+        if (Input.GetButtonDown("Jump")) {
+            jumpPressed = true;
+        }
         jumpHeld = Input.GetButton("Jump");
         crouchHeld = Input.GetButton("Crouch");
         crouchPressed = Input.GetButtonDown("Crouch");
+        if (Input.GetAxisRaw("Horizontal") == 1)
+        {
+            isHoldRight = true;
+            isHoldLeft = false;
+        }
+        else if (Input.GetAxisRaw("Horizontal") == -1)
+        {
+            isHoldLeft = true;
+            isHoldRight = false;
+        }
+        else {
+            isHoldLeft = false;
+            isHoldRight = false;
+        }
+
     }
     private void FixedUpdate() {
         if (GameManager.GetGameOver()) {
             rb.velocity = Vector2.zero;
             return;
-        } 
+        }
         PhysicsCheck();
+
         GroundMovement();
         MidAirMovement();
+
+
+
+        //if (jumpPressed)
+        //{
+        //    xVelocity = 0;
+        //    jumpPressed = false;
+        //    transform.localScale = new Vector3(-transform.localScale.x, 1, 1);
+        //    rb.AddForce(new Vector2(transform.localScale.x * slideJumpForceX, slideJumpForceY), ForceMode2D.Impulse);
+        //}
+
     }
 
-     
+
 
     void PhysicsCheck() {
 
@@ -134,11 +174,23 @@ public class PlayerMovement : MonoBehaviour
 
             rb.bodyType = RigidbodyType2D.Static;
             isHanging = true;
+
+
+        }
+
+        if (!isOnGround && rb.velocity.y < 0&& !isHanging && !ledgeCheck && wallCheck && blockedCheck)
+        {
+            Debug.Log("attach wall");
+            isWallSlide = true;
+            xVelocity = 0;
+        }
+        else {
+            isWallSlide = false;
         }
     }
 
     void GroundMovement(){
-        if (isHanging)
+        if (isHanging || isWallSlide)
             return;
 
         if (crouchHeld && !isCrouch && isOnGround)
@@ -184,7 +236,9 @@ public class PlayerMovement : MonoBehaviour
             if (jumpPressed) {
                 rb.bodyType = RigidbodyType2D.Dynamic;
                 rb.velocity = new Vector2(rb.velocity.x, hangingJumpForce);
+                jumpPressed = false;
                 isHanging = false;
+
             }
 
             if (crouchPressed) {
@@ -193,23 +247,43 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
+        if (isWallSlide) {
+
+            if(!crouchHeld)
+                rb.velocity = new Vector2(rb.velocity.x, slideSpeed);
+
+            
+            if (jumpPressed && isHoldLeft && transform.localScale.x == 1 || jumpPressed && isHoldRight && transform.localScale.x == -1)
+            {                
+                transform.localScale = new Vector3(-transform.localScale.x, 1, 1);
+                //rb.velocity = new Vector2(transform.localScale.x * slideJumpForceX, slideJumpForceY);
+                //rb.AddForce(new Vector2(transform.localScale.x * slideJumpForceX, slideJumpForceY), ForceMode2D.Impulse);
+                rb.AddForce(new Vector2(transform.localScale.x * slideJumpForceX, slideJumpForceY), ForceMode2D.Impulse);
+                jumpPressed = false;
+                isWallSlide = false;
+            }
+        }
+
+
         if (isOnGround && jumpPressed && !isJump && !isHeadBlock)
         {
             if (isCrouch) {
                 StandUp();
                 rb.AddForce(new Vector2(0f, crouchJumpBoost), ForceMode2D.Impulse);
+                jumpPressed = false;
             }
 
             isOnGround = false;
             isJump = true;
             jumpTime = Time.time + jumpHoldDuration;
             rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
-
+            jumpPressed = false;
             AudioManager.PlayJumpAudio();
         }
         else if (isJump) {
             if (jumpHeld) {
                 rb.AddForce(new Vector2(0f, jumpHoldForce), ForceMode2D.Impulse);
+                jumpPressed = false;
             }
             if (jumpTime < Time.time) {
                 isJump = false;
@@ -222,7 +296,8 @@ public class PlayerMovement : MonoBehaviour
 
         Color color = hit ? Color.red : Color.green;
 
-        Debug.DrawRay(pos + offset, rayDirection, color, distance);
+        //Debug.DrawRay(pos + offset, rayDirection, color, distance);
+        Debug.DrawRay(pos + offset, rayDirection * distance,color);
         return hit;
     }
 

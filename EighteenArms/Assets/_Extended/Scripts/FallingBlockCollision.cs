@@ -9,18 +9,27 @@ public class FallingBlockCollision : MonoBehaviour
 	int groundLayer;
 
 
+	int trapsLayer;
+
 	void Start()
 	{
 		rigidBody = GetComponent<Rigidbody2D>();
 		box = GetComponent<BoxCollider2D>();
 		audioSource = GetComponent<AudioSource>();
 
-		groundMask = LayerMask.GetMask("Platforms");
-		groundLayer = LayerMask.NameToLayer("Platforms");
+		groundMask = LayerMask.GetMask("Ground");
+		groundLayer = LayerMask.NameToLayer("Ground");
+
+		trapsLayer = LayerMask.NameToLayer("Traps");
+
+		box.isTrigger = false;
 	}
 
 	public void Fall()
 	{
+		gameObject.layer = trapsLayer;
+		box.isTrigger = true;
+
 		rigidBody.bodyType = RigidbodyType2D.Dynamic;
 	}
 
