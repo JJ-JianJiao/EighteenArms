@@ -32,7 +32,7 @@ public class Orib : MonoBehaviour
 
             AudioManager.PlayOrbAudio();
 
-            GameManager.PlayerGetOrb(this);
+            //GameManager.PlayerGetOrb(this,collision.transform.position);
             if (autoDoor != null)
             {
                 autoDoor.CollectOrb();

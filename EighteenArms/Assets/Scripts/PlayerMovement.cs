@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,7 @@ public class PlayerMovement : MonoBehaviour
 {
     private Rigidbody2D rb;
     private BoxCollider2D boxColl;
+    PlayerHealth playerHealth;
 
     [Header("Movement")]
     public float speed = 0;
@@ -65,10 +67,19 @@ public class PlayerMovement : MonoBehaviour
     Vector2 colliderCrouchSize;
     Vector2 colliderCrouchOffset;
 
+    private void Awake()
+    {
+        if(GameManager.instance)
+            GameManager.SetPlayerObj(this.gameObject);
+        if (UIManager.instance)
+            UIManager.SetPlayerObj(this.gameObject);
+    }
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();    
         boxColl = GetComponent<BoxCollider2D>();
+        playerHealth = GetComponent<PlayerHealth>();
         colliderStandSize = boxColl.size;
         colliderstandOffsize = boxColl.offset;
 
@@ -76,10 +87,17 @@ public class PlayerMovement : MonoBehaviour
         colliderCrouchOffset = new Vector2(boxColl.offset.x, boxColl.offset.y/2);
 
         playerHeight = boxColl.size.y;
+        GameManager.SetCheckPointPosition(transform.position,0);
+    }
+
+    internal void RestMovement()
+    {
+        
     }
 
     void Update()
     {
+        if (playerHealth.isDie || GameManager.instance.isFreezon) return;
         //if (GameManager.GetGameOver()) return;
         //jumpPressed = Input.GetButtonDown("Jump");
         if (Input.GetButtonDown("Jump")) {
@@ -105,14 +123,23 @@ public class PlayerMovement : MonoBehaviour
 
     }
     private void FixedUpdate() {
+
+        if (playerHealth.isDie ) {
+            rb.velocity = new Vector2(xVelocity * speed, rb.velocity.y);
+            return;
+        }
+
         if (GameManager.GetGameOver()) {
             rb.velocity = Vector2.zero;
             return;
         }
         PhysicsCheck();
 
-        GroundMovement();
-        MidAirMovement();
+        if (!GetComponent<PlayerHealth>().invincible)
+        {
+            GroundMovement();
+            MidAirMovement();
+        }
 
 
 
@@ -200,13 +227,14 @@ public class PlayerMovement : MonoBehaviour
         else if (!isOnGround && isCrouch)
             StandUp();
 
-
-        xVelocity = Input.GetAxis("Horizontal");
+        if (!GameManager.instance.isFreezon)
+            xVelocity = Input.GetAxis("Horizontal");
         FlipDirection();
 
         if(isCrouch)
             xVelocity /= crouchSpeedDivisor;
 
+ 
         rb.velocity = new Vector2(xVelocity * speed, rb.velocity.y);
 
     }
@@ -300,5 +328,15 @@ public class PlayerMovement : MonoBehaviour
         Debug.DrawRay(pos + offset, rayDirection * distance,color);
         return hit;
     }
+
+    public void CloseCollider() {
+        boxColl.enabled = false;
+    }
+
+    public void OpenCollider()
+    {
+        boxColl.enabled = true;
+    }
+
 
 }

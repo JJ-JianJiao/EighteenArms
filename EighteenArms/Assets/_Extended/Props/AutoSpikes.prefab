@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 114388866673416988}
   m_Layer: 0
   m_Name: AutoSpikes
-  m_TagString: Untagged
+  m_TagString: Spike
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -199,6 +199,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   activeDuration: 0.2
+  activeTime: 0
 --- !u!1 &1651366192252716
 GameObject:
   m_ObjectHideFlags: 0
@@ -212,7 +213,7 @@ GameObject:
   - component: {fileID: 61407422880277308}
   m_Layer: 8
   m_Name: Body
-  m_TagString: Untagged
+  m_TagString: Spike
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

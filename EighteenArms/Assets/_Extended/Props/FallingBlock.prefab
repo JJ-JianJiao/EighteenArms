@@ -4723,7 +4723,7 @@ GameObject:
   - component: {fileID: 82085116195165720}
   m_Layer: 0
   m_Name: FallingBlock
-  m_TagString: Untagged
+  m_TagString: FallingBlock
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4945,7 +4945,7 @@ GameObject:
   - component: {fileID: 82439963092901696}
   m_Layer: 6
   m_Name: Block
-  m_TagString: Untagged
+  m_TagString: FallingBlock
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

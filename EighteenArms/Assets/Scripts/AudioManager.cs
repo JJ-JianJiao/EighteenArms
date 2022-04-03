@@ -111,14 +111,14 @@ public class AudioManager : MonoBehaviour
     }
 
     public static void PlayDeathAudio() {
-        current.playerSource.clip = current.deathClip;
-        current.playerSource.Play();
+        //current.playerSource.clip = current.deathClip;
+        //current.playerSource.Play();
 
         current.voiceSource.clip = current.deathVoiceClip;
         current.voiceSource.Play();
 
-        current.fxSource.clip = current.deathFXClip;
-        current.fxSource.Play();
+        //current.fxSource.clip = current.deathFXClip;
+        //current.fxSource.Play();
     }
 
     public static void PlayOrbAudio() {
