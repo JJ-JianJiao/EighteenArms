@@ -17,7 +17,17 @@ public class UIManager : MonoBehaviour
 
     public Button playAgainBtn;
     public Button PlayBtn;
+    public Button QuitBtn;
     public GameObject StartGamePanel;
+
+
+    public Button resumeBtn;
+    public Button PauseQuitBtn;
+    public GameObject PauseGamePanel;
+
+    public bool isPasue;
+
+
     private void Awake()
     {
         if (instance == null)
@@ -31,6 +41,7 @@ public class UIManager : MonoBehaviour
         Time.timeScale = 0;
         AudioListener.pause = true;
         DontDestroyOnLoad(gameObject);
+        isPasue = false;
     }
 
     // Start is called before the first frame update
@@ -38,6 +49,36 @@ public class UIManager : MonoBehaviour
     {
         playAgainBtn.onClick.AddListener(PlayAgain);
         PlayBtn.onClick.AddListener(StartGame);
+        QuitBtn.onClick.AddListener(QuitGame);
+        resumeBtn.onClick.AddListener(ResumeGame);
+        PauseQuitBtn.onClick.AddListener(QuitGame);
+    }
+
+    private void ResumeGame()
+    {
+        AudioListener.pause = false;
+        isPasue = !isPasue;
+        Time.timeScale = 1;
+        PauseGamePanel.SetActive(false);
+    }
+
+    private void QuitGame()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyUp(KeyCode.Escape) && !StartGamePanel.activeSelf && !gameOver.gameObject.activeSelf && !isPasue) {
+            AudioListener.pause = true;
+            isPasue = !isPasue;
+            Time.timeScale = 0;
+            PauseGamePanel.SetActive(isPasue);
+        }
     }
 
     private void PlayAgain()

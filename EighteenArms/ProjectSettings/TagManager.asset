@@ -8,6 +8,7 @@ TagManager:
   - Axe
   - FallingBlock
   - CheckPoint
+  - SuperSpike
   layers:
   - Default
   - TransparentFX

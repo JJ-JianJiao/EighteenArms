@@ -112,6 +112,7 @@ public class PlayerHealth : MonoBehaviour
                 damage = 10;
                 break;
             case "FallingBlock":
+            case "SuperSpike":
                 damage = currentHealth;
                 break;
             default:
