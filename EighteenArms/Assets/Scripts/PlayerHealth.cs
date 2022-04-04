@@ -83,6 +83,8 @@ public class PlayerHealth : MonoBehaviour
                 currentHealth = 0;
                 isDie = true;
             }
+            if(!isDie)
+                AudioManager.PlayGetHurtAudio();
 
             UIManager.UpdateHealthBar(currentHealth / totalHealth);
 

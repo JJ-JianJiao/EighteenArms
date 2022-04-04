@@ -24,6 +24,8 @@ public class AudioManager : MonoBehaviour
     public AudioClip[] crouchStepClips;
     public AudioClip jumpClip;
     public AudioClip deathClip;
+    public AudioClip getHurtClip;
+    public AudioClip slideJumpClip;
 
 
     public AudioClip jumpVoiceClip;
@@ -108,6 +110,18 @@ public class AudioManager : MonoBehaviour
 
         current.voiceSource.clip = current.jumpVoiceClip;
         current.voiceSource.Play();
+    }
+
+    public static void PlaySlideJumpAudio() {
+        current.playerSource.clip = current.slideJumpClip;
+        current.playerSource.Play();
+    }
+
+    public static void PlayGetHurtAudio()
+    {
+        current.playerSource.clip = current.getHurtClip;
+        current.playerSource.Play();
+
     }
 
     public static void PlayDeathAudio() {

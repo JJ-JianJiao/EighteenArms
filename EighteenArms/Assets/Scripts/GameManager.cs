@@ -127,6 +127,15 @@ public class GameManager : MonoBehaviour
         instance.isFreezon = false;
     }
 
+    public static void NewGame() {
+        instance.CurrentCheckPointID = -1;
+        instance.checkPointPos = Vector3.zero;
+        instance.oribs.Clear();
+        instance.checkPoints.Clear();
+        SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+        UIManager.UpdateHealthBar(1.0f);
+    }
+
     public static void FadeIn()
     {
 

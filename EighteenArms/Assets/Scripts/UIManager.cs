@@ -25,7 +25,7 @@ public class UIManager : MonoBehaviour
     public Button PauseQuitBtn;
     public GameObject PauseGamePanel;
 
-    public bool isPasue;
+    public static bool isPasue;
 
 
     private void Awake()
@@ -51,13 +51,13 @@ public class UIManager : MonoBehaviour
         PlayBtn.onClick.AddListener(StartGame);
         QuitBtn.onClick.AddListener(QuitGame);
         resumeBtn.onClick.AddListener(ResumeGame);
-        PauseQuitBtn.onClick.AddListener(QuitGame);
+        PauseQuitBtn.onClick.AddListener(BackToMain);
     }
 
     private void ResumeGame()
     {
         AudioListener.pause = false;
-        isPasue = !isPasue;
+        isPasue = false;
         Time.timeScale = 1;
         PauseGamePanel.SetActive(false);
     }
@@ -71,15 +71,41 @@ public class UIManager : MonoBehaviour
 #endif
     }
 
+    private void BackToMain() {
+        AudioListener.pause = true;
+        isPasue = false;
+        Time.timeScale = 0;
+        StartGamePanel.SetActive(true);
+        PauseGamePanel.SetActive(false);
+        GameManager.NewGame();
+    }
+
     private void Update()
     {
-        if (Input.GetKeyUp(KeyCode.Escape) && !StartGamePanel.activeSelf && !gameOver.gameObject.activeSelf && !isPasue) {
-            AudioListener.pause = true;
-            isPasue = !isPasue;
-            Time.timeScale = 0;
-            PauseGamePanel.SetActive(isPasue);
+        //if (Input.GetKeyUp(KeyCode.Escape) && !StartGamePanel.activeSelf && !gameOver.gameObject.activeSelf && !isPasue) {
+        if (Input.GetKeyUp(KeyCode.Escape) && !StartGamePanel.activeSelf && !gameOver.gameObject.activeSelf) {
+
+            if (isPasue)
+            {
+                ResumeGame();
+            }
+            else {
+                PauseGame();
+
+            }
+
         }
+
     }
+
+    void PauseGame() {
+        isPasue = true;
+        AudioListener.pause = true;
+        Time.timeScale = 0;
+
+        PauseGamePanel.SetActive(isPasue);
+    }
+
 
     private void PlayAgain()
     {

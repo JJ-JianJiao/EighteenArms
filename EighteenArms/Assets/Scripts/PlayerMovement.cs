@@ -207,6 +207,10 @@ public class PlayerMovement : MonoBehaviour
 
         if (!isOnGround && rb.velocity.y < 0&& !isHanging && !ledgeCheck && wallCheck && blockedCheck)
         {
+            Vector3 pos = transform.position;
+            pos.x += (wallCheck.distance - 0.05f) * direction;
+
+            transform.position = pos;
             Debug.Log("attach wall");
             isWallSlide = true;
             xVelocity = 0;
@@ -264,6 +268,7 @@ public class PlayerMovement : MonoBehaviour
             if (jumpPressed) {
                 rb.bodyType = RigidbodyType2D.Dynamic;
                 rb.velocity = new Vector2(rb.velocity.x, hangingJumpForce);
+                AudioManager.PlayJumpAudio();
                 jumpPressed = false;
                 isHanging = false;
 
@@ -287,6 +292,7 @@ public class PlayerMovement : MonoBehaviour
                 //rb.velocity = new Vector2(transform.localScale.x * slideJumpForceX, slideJumpForceY);
                 //rb.AddForce(new Vector2(transform.localScale.x * slideJumpForceX, slideJumpForceY), ForceMode2D.Impulse);
                 rb.AddForce(new Vector2(transform.localScale.x * slideJumpForceX, slideJumpForceY), ForceMode2D.Impulse);
+                AudioManager.PlaySlideJumpAudio();
                 jumpPressed = false;
                 isWallSlide = false;
             }
@@ -298,6 +304,7 @@ public class PlayerMovement : MonoBehaviour
             if (isCrouch) {
                 StandUp();
                 rb.AddForce(new Vector2(0f, crouchJumpBoost), ForceMode2D.Impulse);
+                AudioManager.PlayJumpAudio();
                 jumpPressed = false;
             }
 
@@ -305,12 +312,14 @@ public class PlayerMovement : MonoBehaviour
             isJump = true;
             jumpTime = Time.time + jumpHoldDuration;
             rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
-            jumpPressed = false;
             AudioManager.PlayJumpAudio();
+            jumpPressed = false;
+            //AudioManager.PlayJumpAudio();
         }
         else if (isJump) {
             if (jumpHeld) {
                 rb.AddForce(new Vector2(0f, jumpHoldForce), ForceMode2D.Impulse);
+                //AudioManager.PlayJumpAudio();
                 jumpPressed = false;
             }
             if (jumpTime < Time.time) {
