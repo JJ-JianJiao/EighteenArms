@@ -102,6 +102,7 @@ public class PlayerMovement : MonoBehaviour
         //jumpPressed = Input.GetButtonDown("Jump");
         if (Input.GetButtonDown("Jump")) {
             jumpPressed = true;
+            Debug.Log("JumpBtn press" + Time.time);
         }
         jumpHeld = Input.GetButton("Jump");
         crouchHeld = Input.GetButton("Crouch");
@@ -232,7 +233,7 @@ public class PlayerMovement : MonoBehaviour
             StandUp();
 
         if (!GameManager.instance.isFreezon)
-            xVelocity = Input.GetAxis("Horizontal");
+            xVelocity = Input.GetAxisRaw("Horizontal");
         FlipDirection();
 
         if(isCrouch)
@@ -311,7 +312,9 @@ public class PlayerMovement : MonoBehaviour
             isOnGround = false;
             isJump = true;
             jumpTime = Time.time + jumpHoldDuration;
-            rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+            //rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            Debug.Log("Add force to jump" + Time.time);
             AudioManager.PlayJumpAudio();
             jumpPressed = false;
             //AudioManager.PlayJumpAudio();
